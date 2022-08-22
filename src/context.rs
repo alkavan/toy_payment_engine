@@ -33,6 +33,9 @@ impl WithdrawalAccount for Account {
     }
 }
 
+/**
+ * Implementing holding of account funds
+ */
 impl HoldFundsAccount for Account {
     fn hold_funds(&mut self, amount: f32) -> f32 {
         self.held_mut().add_assign(amount);
@@ -40,6 +43,9 @@ impl HoldFundsAccount for Account {
     }
 }
 
+/**
+ * Implementing releasing of account funds
+ */
 impl ReleaseFundsAccount for Account {
     fn release_funds(&mut self, amount: f32) -> f32 {
         self.held_mut().sub_assign(amount);
@@ -47,6 +53,9 @@ impl ReleaseFundsAccount for Account {
     }
 }
 
+/**
+ * Implementing locking and unlocking account
+ */
 impl LockedAccount for Account {
     fn lock(&mut self) {
         *self.locked_mut() = true;
