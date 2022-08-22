@@ -4,7 +4,7 @@
 pub struct Account {
     account_id: u16,
     balance: f32,
-    amount_held: f32,
+    held_funds: f32,
     locked: bool,
 }
 
@@ -13,7 +13,7 @@ impl Account {
         return Account {
             account_id,
             balance,
-            amount_held: 0.0,
+            held_funds: 0.0,
             locked: false,
         };
     }
@@ -31,15 +31,23 @@ impl Account {
     }
 
     pub fn available(&self) -> f32 {
-        return self.balance - self.amount_held;
+        return self.balance - self.held_funds;
     }
 
     pub fn held(&self) -> f32 {
-        return self.amount_held.clone();
+        return self.held_funds.clone();
+    }
+
+    pub fn held_mut(&mut self) -> &mut f32 {
+        return &mut self.held_funds;
     }
 
     pub fn locked(&self) -> bool {
         return self.locked.clone();
+    }
+
+    pub fn locked_mut(&mut self) -> &mut bool {
+        return &mut self.locked;
     }
 }
 

@@ -1,15 +1,17 @@
 mod context;
 mod data;
 mod roles;
+mod utility;
 
 #[macro_use]
 extern crate log;
 extern crate pretty_env_logger;
 
 use crate::context::{BankContext, CsvExportContext, CsvImportContext};
-use crate::data::{Account, Transaction};
+use crate::data::{Account, Transaction, TransactionType};
 use crate::roles::TransactionProcessor;
 
+use crate::utility::{find_transaction_parent, is_special_transaction};
 use std::collections::HashMap;
 use std::env;
 use std::process;
@@ -30,19 +32,27 @@ fn main() {
     let csv_import = CsvImportContext::new(csv_arg);
 
     // read csv file with transactions
-    let transactions = csv_import.read();
+    let transactions_result = csv_import.read();
 
     // check we were able to read the transactions
-    if let Err(err) = transactions {
+    if let Err(err) = transactions_result {
         error!("{}", err);
         process::exit(1);
     }
 
+    // create a container for accounts, and pass a mutable ref to the bank context
     let mut accounts: HashMap<u16, Account> = HashMap::new();
     let mut bank = BankContext::new(&mut accounts);
 
-    for transaction in transactions.unwrap() {
-        bank.process(transaction);
+    let transactions = transactions_result.unwrap();
+
+    for transaction in transactions.iter() {
+        let mut parent: Option<&Transaction> = None;
+        if is_special_transaction(transaction) {
+            // this is not very efficient, but it is simple
+            parent = find_transaction_parent(transaction, transactions.iter());
+        }
+        bank.process(transaction, parent);
     }
 
     // initializer CSV header and writer
