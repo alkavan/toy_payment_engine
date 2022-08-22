@@ -26,7 +26,7 @@ impl Account {
         return self.balance.clone();
     }
 
-    pub fn balance_mut(&mut self) -> &mut f32 {
+    pub(crate) fn balance_mut(&mut self) -> &mut f32 {
         return &mut self.balance;
     }
 
@@ -38,7 +38,7 @@ impl Account {
         return self.held_funds.clone();
     }
 
-    pub fn held_mut(&mut self) -> &mut f32 {
+    pub(crate) fn held_mut(&mut self) -> &mut f32 {
         return &mut self.held_funds;
     }
 
@@ -46,7 +46,7 @@ impl Account {
         return self.locked.clone();
     }
 
-    pub fn locked_mut(&mut self) -> &mut bool {
+    pub(crate) fn locked_mut(&mut self) -> &mut bool {
         return &mut self.locked;
     }
 }
