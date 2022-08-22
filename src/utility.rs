@@ -8,6 +8,9 @@ pub fn round_amount(amount: f32) -> f32 {
     round(amount as f64, 4) as f32
 }
 
+/**
+ * The filter predicate for what is considered "real" transaction
+ */
 pub fn filter_real_transactions(transaction: &&Transaction) -> bool {
     matches!(transaction.transaction_type(), TransactionType::Deposit)
         || matches!(transaction.transaction_type(), TransactionType::Withdrawal)
